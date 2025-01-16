@@ -10,6 +10,7 @@ type Heap[T any] struct {
 }
 
 // NewHeap creates a new heap with the given elements and comparison function.
+// It creates a new internal array, and doesn't affect the one passed as a parameter.
 func NewHeap[T any](elems []T, compare CompareFunc[T]) *Heap[T] {
 	heap := Heap[T]{compare: compare}
 	heap.elems = make([]T, len(elems))
@@ -18,15 +19,8 @@ func NewHeap[T any](elems []T, compare CompareFunc[T]) *Heap[T] {
 	return &heap
 }
 
-// NewHeapMute creates a new heap directly mutating the input slice.
-func NewHeapMute[T any](elems []T, compare CompareFunc[T]) *Heap[T] {
-	heap := Heap[T]{elems: elems, compare: compare}
-	Heapify(heap.elems, compare)
-	return &heap
-}
-
-// Insert adds a new element to the heap and maintains heap property.
-func (me *Heap[T]) Insert(elem T) {
+// Push adds a new element to the heap and maintains heap property.
+func (me *Heap[T]) Push(elem T) {
 	me.elems = append(me.elems, elem)
 	heapifyUp(me.elems, len(me.elems)-1, me.compare)
 }

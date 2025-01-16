@@ -7,9 +7,6 @@ This package provides a generic implementation of a binary heap in Go, supportin
 - Max-Heap and Min-Heap support
 - Generic implementation for custom data types
 - Heap sort for in-place sorting
-- Two initialization options:
-  - **Deep copy heap** (`NewHeap`): Creates a heap with a new copy of the input slice.
-  - **Shallow copy heap** (`NewHeapMute`): Directly modifies the input slice.
 
 ---
 

@@ -45,10 +45,10 @@ func TestHeapSort(t *testing.T) {
 
 func TestPersonPriorityQueue(t *testing.T) {
 	personPriorityQueue := NewHeap([]Person{}, func(a, b Person) bool { return a.age > b.age })
-	personPriorityQueue.Insert(Person{"person1", 10})
-	personPriorityQueue.Insert(Person{"person2", 20})
-	personPriorityQueue.Insert(Person{"person3", 5})
-	personPriorityQueue.Insert(Person{"person4", 30})
+	personPriorityQueue.Push(Person{"person1", 10})
+	personPriorityQueue.Push(Person{"person2", 20})
+	personPriorityQueue.Push(Person{"person3", 5})
+	personPriorityQueue.Push(Person{"person4", 30})
 
 	var result []Person
 	for !personPriorityQueue.IsEmpty() {
@@ -77,35 +77,4 @@ func TestEmptyHeap(t *testing.T) {
 		}
 	}()
 	emptyHeap.Pop()
-}
-
-func TestHeapDeepVsShallow(t *testing.T) {
-	original := []int{10, 20, 5, 30}
-
-	deepHeap := NewHeap(original, func(a, b int) bool { return a > b })
-	shallowHeap := NewHeapMute(original, func(a, b int) bool { return a > b })
-
-	shallowHeap.Insert(40)
-
-	if deepHeap.Length() == shallowHeap.Length() {
-		t.Errorf("Deep heap was unexpectedly affected by shallow heap changes")
-	}
-
-	var deepResult, shallowResult []int
-	for !deepHeap.IsEmpty() {
-		deepResult = append(deepResult, deepHeap.Pop())
-	}
-	for !shallowHeap.IsEmpty() {
-		shallowResult = append(shallowResult, shallowHeap.Pop())
-	}
-
-	expectedDeep := []int{30, 20, 10, 5}
-	if !reflect.DeepEqual(deepResult, expectedDeep) {
-		t.Errorf("Deep heap failed: got %v, want %v", deepResult, expectedDeep)
-	}
-
-	expectedShallow := []int{40, 30, 20, 10, 5}
-	if !reflect.DeepEqual(shallowResult, expectedShallow) {
-		t.Errorf("Shallow heap failed: got %v, want %v", shallowResult, expectedShallow)
-	}
 }
