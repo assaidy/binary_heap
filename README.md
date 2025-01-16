@@ -107,8 +107,6 @@ func main() {
 
 ## Testing
 
-The package includes a comprehensive test suite. To run the tests:
-
 ```bash
 go test ./...
 ```
