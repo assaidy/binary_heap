@@ -38,6 +38,14 @@ func (me *Heap[T]) Pop() T {
 	return result
 }
 
+// Peek returns the root element of the heap.
+func (me *Heap[T]) Peek() T {
+	if len(me.elems) == 0 {
+		panic("heap is empty")
+	}
+	return me.elems[0]
+}
+
 // Length returns the number of elements in the heap.
 func (me *Heap[T]) Length() int {
 	return len(me.elems)
