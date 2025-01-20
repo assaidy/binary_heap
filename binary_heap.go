@@ -26,6 +26,7 @@ func (me *Heap[T]) Push(elem T) {
 }
 
 // Pop removes and returns the root element of the heap.
+// Panics if heap is empty.
 func (me *Heap[T]) Pop() T {
 	if len(me.elems) == 0 {
 		panic("heap is empty")
@@ -39,6 +40,7 @@ func (me *Heap[T]) Pop() T {
 }
 
 // Peek returns the root element of the heap.
+// Panics if heap is empty.
 func (me *Heap[T]) Peek() T {
 	if len(me.elems) == 0 {
 		panic("heap is empty")
@@ -79,32 +81,34 @@ func HeapSort[T any](elems []T, compare CompareFunc[T]) {
 
 // heapifyDown restores the heap property by sinking an element down the tree.
 func heapifyDown[T any](elems []T, i int, compare CompareFunc[T]) {
-	var (
-		n     = len(elems)
-		curr  = i
-		left  = leftIdx(i)
-		right = rightIdx(i)
-	)
-	if left < n && compare(elems[left], elems[curr]) {
-		curr = left
-	}
-	if right < n && compare(elems[right], elems[curr]) {
-		curr = right
-	}
-	if curr != i {
+	// from container/heap
+	n := len(elems)
+	for {
+		curr := leftIdx(i)
+		if curr >= n || curr < 0 { // left < 0 after int overflow
+			break
+		}
+		if curr+1 < n && compare(elems[curr+1], elems[curr]) {
+			curr = curr + 1 // right
+		}
+		if !compare(elems[curr], elems[i]) {
+			break
+		}
 		elems[i], elems[curr] = elems[curr], elems[i]
-		heapifyDown(elems, curr, compare)
+		i = curr
 	}
 }
 
 // heapifyUp restores the heap property by bubbling an element up the tree.
 func heapifyUp[T any](elems []T, i int, compare CompareFunc[T]) {
-	if i > 0 {
-		p := parentIdx(i)
-		if compare(elems[i], elems[p]) {
-			elems[i], elems[p] = elems[p], elems[i]
-			heapifyUp(elems, p, compare)
+	// from container/heap
+	for {
+		j := parentIdx(i)
+		if j == i || !compare(elems[i], elems[j]) {
+			break
 		}
+		elems[i], elems[j] = elems[j], elems[i]
+		i = j
 	}
 }
 
