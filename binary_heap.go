@@ -1,5 +1,7 @@
 package binary_heap
 
+// TODO: add default compare functions
+
 // CompareFunc defines a generic function type for comparing two elements.
 type CompareFunc[T any] func(a, b T) bool
 
@@ -61,7 +63,7 @@ func (me *Heap[T]) IsEmpty() bool {
 // Heapify transforms a slice into a valid heap based on the comparison function.
 func Heapify[T any](elems []T, compare CompareFunc[T]) {
 	// Start from the last parent node and heapify down.
-	for i := parentIdx(len(elems) - 1); i >= 0; i-- {
+	for i := len(elems)/2 - 1; i >= 0; i-- {
 		heapifyDown(elems, i, compare)
 	}
 }
@@ -84,7 +86,7 @@ func heapifyDown[T any](elems []T, i int, compare CompareFunc[T]) {
 	// from container/heap
 	n := len(elems)
 	for {
-		curr := leftIdx(i)
+		curr := 2*i + 1            // left
 		if curr >= n || curr < 0 { // left < 0 after int overflow
 			break
 		}
@@ -103,26 +105,11 @@ func heapifyDown[T any](elems []T, i int, compare CompareFunc[T]) {
 func heapifyUp[T any](elems []T, i int, compare CompareFunc[T]) {
 	// from container/heap
 	for {
-		j := parentIdx(i)
+		j := (i - 1) / 2 // parent
 		if j == i || !compare(elems[i], elems[j]) {
 			break
 		}
 		elems[i], elems[j] = elems[j], elems[i]
 		i = j
 	}
-}
-
-// parentIdx calculates the index of the parent node.
-func parentIdx(i int) int {
-	return (i - 1) / 2
-}
-
-// leftIdx calculates the index of the left child node.
-func leftIdx(i int) int {
-	return 2*i + 1
-}
-
-// rightIdx calculates the index of the right child node.
-func rightIdx(i int) int {
-	return 2*i + 2
 }
